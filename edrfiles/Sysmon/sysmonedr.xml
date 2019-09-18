@@ -1,0 +1,87 @@
+<Sysmon schemaversion="4.22">
+	<HashAlgorithms>md5,sha256</HashAlgorithms> <!-- Both MD5 and SHA256 are the industry-standard algorithms for identifying files -->
+	<EventFiltering>
+		<FileCreateTime onmatch="include" />
+		<ProcessCreate onmatch="include" />
+		<ProcessTerminate onmatch="include" />
+	<RuleGroup name="group 1" groupRelation="and">
+		<NetworkConnect onmatch="include">
+			<Image condition="begin with">C:\Users</Image>
+			<Image condition="begin with">C:\ProgramData</Image> 
+			<Image condition="begin with">C:\Windows\Temp</Image>
+			<Image condition="begin with">C:\Windows\system32\WindowsPowerShell\v1.0\</Image>
+			<Image condition="image">at.exe</Image>
+			<Image condition="image">certutil.exe</Image> 
+			<Image condition="image">cmd.exe</Image>
+			<Image condition="image">cmstp.exe</Image>
+			<Image condition="image">cscript.exe</Image>
+			<Image condition="image">driverquery.exe</Image>
+			<Image condition="image">dsquery.exe</Image>
+			<Image condition="image">hh.exe</Image>
+			<Image condition="image">infDefaultInstall.exe</Image>
+			<Image condition="image">java.exe</Image>
+			<Image condition="image">javaw.exe</Image>
+			<Image condition="image">javaws.exe</Image>
+			<Image condition="image">mmc.exe</Image>
+			<Image condition="image">msbuild.exe</Image>
+			<Image condition="image">mshta.exe</Image> 
+			<Image condition="image">msiexec.exe</Image>
+			<Image condition="image">nbtstat.exe</Image>
+			<Image condition="image">net.exe</Image>
+			<Image condition="image">net1.exe</Image>
+			<Image condition="image">notepad.exe</Image>
+			<Image condition="image">nslookup.exe</Image>
+			<Image condition="image">powershell.exe</Image>
+			<Image condition="image">qprocess.exe</Image>
+			<Image condition="image">qwinsta.exe</Image> 
+			<Image condition="image">qwinsta.exe</Image>
+			<Image condition="image">reg.exe</Image>
+			<Image condition="image">regsvcs.exe</Image>
+			<Image condition="image">regsvr32.exe</Image>
+			<Image condition="image">rundll32.exe</Image>
+			<Image condition="image">rwinsta.exe</Image>
+			<Image condition="image">sc.exe</Image>
+			<Image condition="image">schtasks.exe</Image>
+			<Image condition="image">taskkill.exe</Image>
+			<Image condition="image">tasklist.exe</Image>
+			<Image condition="image">wmic.exe</Image>
+			<Image condition="image">wscript.exe</Image>
+			<Image condition="image">nc.exe</Image>
+			<Image condition="image">ncat.exe</Image>
+			<Image condition="image">psexec.exe</Image>
+			<Image condition="image">psexesvc.exe</Image>
+			<Image condition="image">tor.exe</Image>
+			<Image condition="image">vnc.exe</Image>
+			<Image condition="image">vncservice.exe</Image>
+			<Image condition="image">vncviewer.exe</Image>
+			<Image condition="image">winexesvc.exe</Image>
+			<Image condition="image">nmap.exe</Image>
+			<Image condition="image">psinfo.exe</Image>
+			<Image condition="image">putty.exe</Image>
+			<!--Ports: Suspicious-->
+			<DestinationPort condition="is">22</DestinationPort> <!--SSH protocol, monitor admin connections-->
+			<DestinationPort condition="is">23</DestinationPort> <!--Telnet protocol, monitor admin connections, insecure-->
+			<DestinationPort condition="is">25</DestinationPort> <!--SMTP mail protocol port, insecure, used by threats-->
+			<DestinationPort condition="is">142</DestinationPort> <!--IMAP mail protocol port, insecure, used by threats-->
+			<DestinationPort condition="is">3389</DestinationPort> <!--Microsoft:Windows:RDP: Monitor admin connections-->
+			<DestinationPort condition="is">5800</DestinationPort> <!--VNC protocol: Monitor admin connections, often insecure-->
+			<DestinationPort condition="is">5900</DestinationPort> <!--VNC protocol Monitor admin connections, often insecure-->
+			<!--Ports: Proxy-->
+			<DestinationPort condition="is">1080</DestinationPort> <!--Socks proxy port | Credit @ion-storm-->
+			<DestinationPort condition="is">3128</DestinationPort> <!--Socks proxy port | Credit @ion-storm-->
+			<DestinationPort condition="is">8080</DestinationPort> <!--Socks proxy port | Credit @ion-storm-->
+			<!--Ports: Tor-->
+			<DestinationPort condition="is">1723</DestinationPort> <!--Tor protocol [ https://attack.mitre.org/wiki/Technique/T1090 ] | Credit @ion-storm-->
+			<DestinationPort condition="is">4500</DestinationPort> <!--Tor protocol, also triggers on IPsec [ https://attack.mitre.org/wiki/Technique/T1090 ] | Credit @ion-storm-->
+			<DestinationPort condition="is">9001</DestinationPort> <!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
+			<DestinationPort condition="is">9030</DestinationPort>
+			<DestinationPort condition="is">53</DestinationPort> 	<!--Tor protocol [ http://www.computerworlduk.com/tutorial/security/tor-enterprise-2016-blocking-malware-darknet-use-rogue-nodes-3633907/ ] -->
+		</NetworkConnect>
+		<NetworkConnect onmatch="exclude">
+			<DestinationIp condition="is">127.0.0.1</DestinationIp>
+			<DestinationIp condition="begin with">fe80:0:0:0</DestinationIp>
+		<!--	<DestinationIp condition="is">8.8.8.8</DestinationIp> -->
+		</NetworkConnect>
+	</RuleGroup>
+	</EventFiltering>
+</Sysmon>
