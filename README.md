@@ -1,4 +1,5 @@
 #0dog
+
 What is 0dog?
 0dog is the PowerShell based malicious ip detection tool. I have planned for multiple phrase of this tool. The first level or first version of the tool I have added the DNSBL as a malicious or block list checker and Sysmon for generating event for process which trying to accesses the network.
 Why this tool is for?
